@@ -1,4 +1,5 @@
 import bs4
+import requests
 import configparser
 import urllib.parse
 import mechanize
@@ -20,6 +21,8 @@ def main():
     response = br.follow_link(text_regex=r"Ausleihe zeigen")
     lentlist = bs4.BeautifulSoup(response.read(), 'html.parser')
     table = lentlist.select('table[class="rTable_table"]')[0]
+    import urllib.request
+    urllib.request.urlopen("https://health.d1v3.de/ping/5185e698-ea0b-44e0-857e-8f52487dca5d")
     for entry in table.tbody.select('tr'):
         info = list(map(lambda x: str(x.text).strip(), entry.select('td')))
         date = datetime.datetime.strptime(info[1], '%d.%m.%Y')
