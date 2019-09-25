@@ -27,6 +27,7 @@ def main():
         info = list(map(lambda x: str(x.text).strip(), entry.select('td')))
         date = datetime.datetime.strptime(info[1], '%d.%m.%Y')
         delta = date - datetime.datetime.now()
+        print(delta, info)
 
         if delta.days <= 10 or delta.days == 20 or delta.days == 15:
             pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message('Bitte an {} denken, Abgabe {}'.format(info[3], info[1]), title="Erinnerung")
