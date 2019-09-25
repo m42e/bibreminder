@@ -9,5 +9,5 @@ RUN pip install -r /home/appuser/requirements.txt
 WORKDIR /home/appuser
 USER appuser
 
-COPY bibcheck.py /
+COPY bibcheck.py ./
 CMD ["python", "./bibcheck.py"]
