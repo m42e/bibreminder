@@ -20,7 +20,7 @@ def main():
     br.follow_link(text_regex=r"Konto")
     response = br.follow_link(text_regex=r"Ausleihe zeigen")
     br.select_form('Form0')
-    response = self.br.submit(name='textButton$0', label='Alle verlängern')
+    response = br.submit(name='textButton$0', label='Alle verlängern')
     lentlist = bs4.BeautifulSoup(response.read(), 'html.parser')
     table = lentlist.select('table[class="rTable_table"]')[0]
     import urllib.request
