@@ -21,15 +21,16 @@ def main():
     response = br.follow_link(text_regex=r"Ausleihe zeigen")
     lentlist = bs4.BeautifulSoup(response.read(), 'html.parser')
     table = lentlist.select('table[class="rTable_table"]')[0]
-    import urllib.request
-    urllib.request.urlopen("https://health.d1v3.de/ping/5185e698-ea0b-44e0-857e-8f52487dca5d")
+    allinfo = []
     for entry in table.tbody.select('tr'):
         info = list(map(lambda x: str(x.text).strip(), entry.select('td')))
         date = datetime.datetime.strptime(info[1], '%d.%m.%Y')
         delta = date - datetime.datetime.now()
+        allinfo.append(str(info))
 
         if delta.days <= 10 or delta.days == 20 or delta.days == 15:
             pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message('Bitte an {} denken, Abgabe {}'.format(info[3], info[1]), title="Erinnerung")
+    requests.post("https://health.d1v3.de/ping/5185e698-ea0b-44e0-857e-8f52487dca5d", data='\n'.join(allinfo))
 
 if __name__ == "__main__":
     main()
