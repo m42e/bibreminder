@@ -9,6 +9,7 @@ import datetime
 pushover.init('a5uja274ec5h46paanzjqy5zo1ym6y')
 
 def main():
+    requests.get("https://health.d1v3.de/ping/5185e698-ea0b-44e0-857e-8f52487dca5d/start")
     br = mechanize.Browser()
     starturl = 'https://ssl.muenchen.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC'
     response = br.open(starturl)
