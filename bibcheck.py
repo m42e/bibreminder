@@ -25,7 +25,7 @@ def check(username, password):
     br['$Textfield$0'] = password
     response = br.submit()
     br.follow_link(text_regex=r"Konto")
-    response = br.follow_link(text_regex=r"Ausleihe zeigen")
+    response = br.follow_link(text_regex=r"Ausleihen? zeigen")
     br.select_form('Form0')
     response = br.submit(name='textButton$0', label='Alle verlängern')
     lentlist = bs4.BeautifulSoup(response.read(), 'html.parser')
