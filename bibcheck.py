@@ -11,7 +11,7 @@ pushover.init('a5uja274ec5h46paanzjqy5zo1ym6y')
 def main():
     requests.get("https://health.d1v3.de/ping/5185e698-ea0b-44e0-857e-8f52487dca5d/start")
     allinfo = []
-    allinfo += check('40008532980', '4F3sf7KfQC')
+    allinfo += check('400008532980', '4F3sf7KfQC')
     allinfo += check('400006306065', '54zjxTHvIY')
     requests.post("https://health.d1v3.de/ping/5185e698-ea0b-44e0-857e-8f52487dca5d", data='\n'.join(allinfo).encode('utf8'))
 
