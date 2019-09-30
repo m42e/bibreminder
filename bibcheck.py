@@ -13,6 +13,7 @@ def main():
     allinfo = []
     allinfo += check('400008532980', '4F3sf7KfQC')
     allinfo += check('400006306065', '54zjxTHvIY')
+    allinfo += check('800000974318', '142042')
     requests.post("https://health.d1v3.de/ping/5185e698-ea0b-44e0-857e-8f52487dca5d", data='\n'.join(allinfo).encode('utf8'))
 
 def check(username, password):
