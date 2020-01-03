@@ -26,20 +26,23 @@ def check(username, password):
     br['$Textfield$0'] = password
     response = br.submit()
     br.follow_link(text_regex=r"Konto")
-    response = br.follow_link(text_regex=r"Ausleihen? zeigen")
-    br.select_form('Form0')
-    response = br.submit(name='textButton$0', label='Alle verlängern')
-    lentlist = bs4.BeautifulSoup(response.read(), 'html.parser')
-    table = lentlist.select('table[class="rTable_table"]')[0]
-    allinfo = []
-    for entry in table.tbody.select('tr'):
-        info = list(map(lambda x: str(x.text).strip(), entry.select('td')))
-        date = datetime.datetime.strptime(info[1], '%d.%m.%Y')
-        delta = date - datetime.datetime.now()
-        allinfo.append(str(info))
+    try:
+        response = br.follow_link(text_regex=r"Ausleihen? zeigen")
+        br.select_form('Form0')
+        response = br.submit(name='textButton$0', label='Alle verlängern')
+        lentlist = bs4.BeautifulSoup(response.read(), 'html.parser')
+        table = lentlist.select('table[class="rTable_table"]')[0]
+        allinfo = []
+        for entry in table.tbody.select('tr'):
+            info = list(map(lambda x: str(x.text).strip(), entry.select('td')))
+            date = datetime.datetime.strptime(info[1], '%d.%m.%Y')
+            delta = date - datetime.datetime.now()
+            allinfo.append(str(info))
 
-        if delta.days <= 10 or delta.days == 20 or delta.days == 15:
-            pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message('Bitte an {} denken, Abgabe {}'.format(info[3], info[1]), title="Erinnerung")
+            if delta.days <= 10 or delta.days == 20 or delta.days == 15:
+                pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message('Bitte an {} denken, Abgabe {}'.format(info[3], info[1]), title="Erinnerung")
+    except StopIteration as se:
+        pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message('nichts ausgeliehen')
     return allinfo
 
 if __name__ == "__main__":
