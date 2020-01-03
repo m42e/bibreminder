@@ -1,4 +1,5 @@
 import bs4
+import time
 import requests
 import configparser
 import urllib.parse
@@ -9,15 +10,22 @@ import os
 
 
 def main():
-    pushover.init(os.environ['PUSHOVER_KEY'])
-    if 'HEALTHCHECK_URL' in os.environ:
-        requests.get(f"{os.environ['HEALTHCHECK_URL']}/start")
-    allinfo = []
-    users = list(map(lambda x: x.split(':', 1), os.environ['BIB_USERS'].split(',')))
-    for user, pwd in users:
-        allinfo += check(user, pwd)
-    if 'HEALTHCHECK_URL' in os.environ:
-        requests.post(f"{os.environ['HEALTHCHECK_URL']}/start", data='\n'.join(allinfo).encode('utf8'))
+    while True:
+        pushover.init(os.environ['PUSHOVER_KEY'])
+        if 'HEALTHCHECK_URL' in os.environ:
+            requests.get(f"{os.environ['HEALTHCHECK_URL']}/start")
+        allinfo = []
+        users = list(map(lambda x: x.split(':', 1), os.environ['BIB_USERS'].split(',')))
+        for user, pwd in users:
+            allinfo += check(user, pwd)
+        if 'HEALTHCHECK_URL' in os.environ:
+            requests.post(f"{os.environ['HEALTHCHECK_URL']}/start", data='\n'.join(allinfo).encode('utf8'))
+        if os.environ['RUN_FOREVER'] == 'False':
+            break
+
+        now = datetime.datetime.utcnow
+        to = (now() + datetime.timedelta(days = 1)).replace(hour=6, minute=0, second=0)
+        time.sleep((to-now()).seconds)
 
 def check(username, password):
     br = mechanize.Browser()
