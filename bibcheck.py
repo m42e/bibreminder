@@ -5,16 +5,19 @@ import urllib.parse
 import mechanize
 import pushover
 import datetime
+import os
 
-pushover.init('a5uja274ec5h46paanzjqy5zo1ym6y')
 
 def main():
-    requests.get("https://health.d1v3.de/ping/5185e698-ea0b-44e0-857e-8f52487dca5d/start")
+    pushover.init(os.environ['PUSHOVER_KEY'])
+    if 'HEALTHCHECK_URL' in os.environ:
+        requests.get(f"{os.environ['HEALTHCHECK_URL']}/start")
     allinfo = []
-    allinfo += check('400008532980', '4F3sf7KfQC')
-    allinfo += check('400006306065', '54zjxTHvIY')
-    allinfo += check('800000974318', '142042')
-    requests.post("https://health.d1v3.de/ping/5185e698-ea0b-44e0-857e-8f52487dca5d", data='\n'.join(allinfo).encode('utf8'))
+    users = list(map(lambda x: x.split(':', 1), os.environ['BIB_USERS'].split(',')))
+    for user, pwd in users:
+        allinfo += check(user, pwd)
+    if 'HEALTHCHECK_URL' in os.environ:
+        requests.post(f"{os.environ['HEALTHCHECK_URL']}/start", data='\n'.join(allinfo).encode('utf8'))
 
 def check(username, password):
     br = mechanize.Browser()
@@ -40,9 +43,11 @@ def check(username, password):
             allinfo.append(str(info))
 
             if delta.days <= 10 or delta.days == 20 or delta.days == 15:
-                pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message('Bitte an {} denken, Abgabe {}'.format(info[3], info[1]), title="Erinnerung")
+                for client in os.environ['PUSHOVER_CLIENTS'].split(','):
+                    pushover.Client(client).send_message('Bitte an {} denken, Abgabe {}'.format(info[3], info[1]), title="Erinnerung")
     except (StopIteration, mechanize._mechanize.LinkNotFoundError) as e:
-        pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message(f'nichts ausgeliehen {username}({e})')
+        for client in os.environ['PUSHOVER_CLIENTS'].split(','):
+            pushover.Client(client).send_message(f'nichts ausgeliehen {username}({e})')
         return []
     return allinfo
 
