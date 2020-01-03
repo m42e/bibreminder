@@ -41,8 +41,8 @@ def check(username, password):
 
             if delta.days <= 10 or delta.days == 20 or delta.days == 15:
                 pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message('Bitte an {} denken, Abgabe {}'.format(info[3], info[1]), title="Erinnerung")
-    except StopIteration as se:
-        pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message('nichts ausgeliehen')
+    except (StopIteration, mechanize._mechanize.LinkNotFoundError) as e:
+        pushover.Client('u5w9h8gc7hpzvr5a2kh2xh4m9zpidq').send_message(f'nichts ausgeliehen {username}({e})')
     return allinfo
 
 if __name__ == "__main__":
