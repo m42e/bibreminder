@@ -20,7 +20,7 @@ def main():
             allinfo += check(user, pwd)
         if 'HEALTHCHECK_URL' in os.environ:
             requests.post(f"{os.environ['HEALTHCHECK_URL']}/start", data='\n'.join(allinfo).encode('utf8'))
-        if os.environ['RUN_FOREVER'] == 'False':
+        if 'RUN_FOREVER' in os.environ and os.environ['RUN_FOREVER'] == 'False':
             break
 
         now = datetime.datetime.utcnow
