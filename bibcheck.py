@@ -19,7 +19,7 @@ def main():
         for user, pwd in users:
             allinfo += check(user, pwd)
         if 'HEALTHCHECK_URL' in os.environ:
-            requests.post(f"{os.environ['HEALTHCHECK_URL']}/start", data='\n'.join(allinfo).encode('utf8'))
+            requests.post(f"{os.environ['HEALTHCHECK_URL']}", data='\n'.join(allinfo).encode('utf8'))
         if 'RUN_FOREVER' in os.environ and os.environ['RUN_FOREVER'] == 'False':
             break
 
@@ -52,10 +52,10 @@ def check(username, password):
 
             if delta.days <= 10 or delta.days == 20 or delta.days == 15:
                 for client in os.environ['PUSHOVER_CLIENTS'].split(','):
-                    pushover.Client(client).send_message('Bitte an {} denken, Abgabe {}'.format(info[3], info[1]), title="Erinnerung")
+                    pushover.Client(client).send_message(f'Bitte an {info[3]} denken, Abgabe {info[3]} - {username}', title="Erinnerung")
     except (StopIteration, mechanize._mechanize.LinkNotFoundError) as e:
         for client in os.environ['PUSHOVER_CLIENTS'].split(','):
-            pushover.Client(client).send_message(f'nichts ausgeliehen {username}({e})')
+            pushover.Client(client).send_message(f'nichts ausgeliehen {username} ({e})')
         return []
     return allinfo
 
