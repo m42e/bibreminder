@@ -1,4 +1,5 @@
 import bs4
+import itertools
 import time
 import requests
 import configparser
@@ -8,6 +9,10 @@ import pushover
 import datetime
 import os
 
+def split_notify(string):
+    values = string.split(':')
+    return (values[0], values[1:])
+
 
 def main():
     while True:
@@ -16,8 +21,9 @@ def main():
             requests.get(f"{os.environ['HEALTHCHECK_URL']}/start")
         allinfo = []
         users = list(map(lambda x: x.split(':', 1), os.environ['BIB_USERS'].split(',')))
+        notify = dict(map(split_notify, os.environ['NOTIFY_USERS'].split(',')))
         for user, pwd in users:
-            allinfo += check(user, pwd)
+            allinfo += check(user, pwd, notify.get(user, []))
         if 'HEALTHCHECK_URL' in os.environ:
             requests.post(f"{os.environ['HEALTHCHECK_URL']}/start", data='\n'.join(allinfo).encode('utf8'))
         if 'RUN_FOREVER' in os.environ and os.environ['RUN_FOREVER'] == 'False':
@@ -27,7 +33,7 @@ def main():
         to = (now() + datetime.timedelta(days = 1)).replace(hour=6, minute=0, second=0)
         time.sleep((to-now()).seconds)
 
-def check(username, password):
+def check(username, password, notify_ids):
     br = mechanize.Browser()
     starturl = 'https://ssl.muenchen.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC'
     response = br.open(starturl)
@@ -51,11 +57,11 @@ def check(username, password):
             allinfo.append(str(info))
 
             if delta.days <= 10 or delta.days == 20 or delta.days == 15:
-                for client in os.environ['PUSHOVER_CLIENTS'].split(','):
-                    pushover.Client(client).send_message('Bitte an {} denken, Abgabe {}'.format(info[3], info[1]), title="Erinnerung")
+                for client in itertools.join(notify_ids, os.environ['PUSHOVER_CLIENTS'].split(',')):
+                    pushover.Client(client).send_message('Bitte an {} denken, Abgabe {} ({})'.format(info[3], info[1], username), title="Erinnerung")
     except (StopIteration, mechanize._mechanize.LinkNotFoundError) as e:
-        for client in os.environ['PUSHOVER_CLIENTS'].split(','):
-            pushover.Client(client).send_message(f'nichts ausgeliehen {username}({e})')
+        for client in itertools.join(notify_ids, os.environ['PUSHOVER_CLIENTS'].split(',')):
+            pushover.Client(client).send_message(f'nichts ausgeliehen {username} ({e})')
         return []
     return allinfo
 
