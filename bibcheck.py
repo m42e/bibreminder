@@ -57,7 +57,11 @@ def check(username, password, notify_ids):
             allinfo.append(str(info))
             if delta.days <= 10 or delta.days == 20 or delta.days == 15:
                 for client in itertools.chain(notify_ids, os.environ.get('PUSHOVER_CLIENTS', '').split(',')):
-                    pushover.Client(client).send_message(f'Bitte an {info[3]} denken, Abgabe {info[3]} - {username}', title="Erinnerung")
+                    print("CLIENT {client}")
+                    try:
+                    	pushover.Client(client).send_message(f'Bitte an {info[3]} denken, Abgabe {info[3]} - {username}', title="Erinnerung")
+                    except:
+                        print("No client")
     except (StopIteration, mechanize._mechanize.LinkNotFoundError) as e:
         #for client in itertools.join(notify_ids, os.environ['PUSHOVER_CLIENTS'].split(',')):
         #    pushover.Client(client).send_message(f'nichts ausgeliehen {username} ({e})')
