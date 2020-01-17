@@ -59,8 +59,8 @@ def check(username, password, notify_ids):
                 for client in itertools.chain(notify_ids, os.environ['PUSHOVER_CLIENTS'].split(',')):
                     pushover.Client(client).send_message(f'Bitte an {info[3]} denken, Abgabe {info[3]} - {username}', title="Erinnerung")
     except (StopIteration, mechanize._mechanize.LinkNotFoundError) as e:
-        for client in itertools.join(notify_ids, os.environ['PUSHOVER_CLIENTS'].split(',')):
-            pushover.Client(client).send_message(f'nichts ausgeliehen {username} ({e})')
+        #for client in itertools.join(notify_ids, os.environ['PUSHOVER_CLIENTS'].split(',')):
+        #    pushover.Client(client).send_message(f'nichts ausgeliehen {username} ({e})')
         return []
     return allinfo
 
