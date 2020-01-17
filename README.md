@@ -14,9 +14,10 @@ Configure the docker container with the following variables.
 - `BIB_USERS` A comma seperated list of combinations of <USER>:<PWD> combinations to check and extend lent items.
 
 Example:
-´´´
+
+```
 PUSHOVER_KEY=abcdef1234567890abcdef12345678
 HEALTHCHECK_URL=https://healthcheck.io/ping/0000000-0000-0000-0000-000000000000
 BIB_USERS=400001234567:password,40000987654:drowssap
 NOTIFY_USERS=	400001234567:12345678abcdef1234567890abcdef,40000987654:12345678abcdef1234567890abcdef
-´´´
+```
