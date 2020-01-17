@@ -12,6 +12,7 @@ Configure the docker container with the following variables.
 - `PUSHOVER_CLIENTS` A comma seperated list of pushover client ids.
 - `HEALTHCHECK_URL` An url for performing a healthcheck (see healthckeck.io for details)
 - `BIB_USERS` A comma seperated list of combinations of <USER>:<PWD> combinations to check and extend lent items.
+- `LIBRARY_URL` The url of the OPAC entry page of your library
 
 Example:
 
