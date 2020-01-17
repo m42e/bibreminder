@@ -35,7 +35,7 @@ def main():
 
 def check(username, password, notify_ids):
     br = mechanize.Browser()
-    starturl = 'https://ssl.muenchen.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC'
+    starturl = os.environ.get('LIBRARY_URL', 'https://ssl.muenchen.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC')
     response = br.open(starturl)
     br.follow_link(text_regex=r"Anmelden")
     br.select_form('Form0')
