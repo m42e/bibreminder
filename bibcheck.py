@@ -59,10 +59,10 @@ def check(username, password, notify_ids):
                 message = f'Bitte an {info[3]} denken\n' 
                 if delta.days <= 7:
                     message += '<font color="#ff0000">'
-                message += 'Abgabe <b>{info[1]}</b>'
+                message += f'Abgabe <b>{info[1]}</b>'
                 if delta.days <= 7:
                     message += '</font>'
-                message += ' - {username}'
+                message += f' - {username}'
                 for client in itertools.chain(notify_ids, os.environ.get('PUSHOVER_CLIENTS', '').split(',')):
                     try:
                         pushover.Client(client).send_message(message, title="Erinnerung", html=1)
