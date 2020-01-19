@@ -1,10 +1,14 @@
-FROM python:3.7
+FROM python:3.8-alpine as base
 
+FROM base as builder
+RUN mkdir /install
+WORKDIR /install
+COPY requirements.txt /requirements.txt
+RUN pip install --install-option="--prefix=/install" -r /requirements.txt
+
+FROM base
+COPY --from=builder /install /usr/local
 RUN useradd --create-home appuser
-
-COPY requirements.txt /home/appuser
-RUN pip install -r /home/appuser/requirements.txt
-
 
 WORKDIR /home/appuser
 USER appuser
