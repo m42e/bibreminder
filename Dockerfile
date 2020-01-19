@@ -8,7 +8,7 @@ RUN pip install --install-option="--prefix=/install" -r /requirements.txt
 
 FROM base
 COPY --from=builder /install /usr/local
-RUN useradd --create-home appuser
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 WORKDIR /home/appuser
 USER appuser
