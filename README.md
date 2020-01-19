@@ -1,6 +1,6 @@
 # Bib Reminder for Munich public library
 
-This automatically sending pushover messages when a lent item is about to be returned, while also extending the period if possible.
+This automatically sending pushover messages when a lent item is about to be returned, while also extending the period of the lending if possible.
 
 Configure the docker container with the following variables.
 
@@ -9,10 +9,13 @@ Configure the docker container with the following variables.
 ### Required
 
 - `PUSHOVER_KEY` Your pushover API Key
-- `PUSHOVER_CLIENTS` A comma seperated list of pushover client ids.
-- `HEALTHCHECK_URL` An url for performing a healthcheck (see healthckeck.io for details)
+- `PUSHOVER_CLIENTS` A comma seperated list of pushover client ids. All the notifications will be sent to this ids
+- `NOTIFY_USERS` A coma separated list of <USER>:<pushover client id> tulles to send pushover messages selectivly
+- `HEALTHCHECK_URL` OPTIONAL url for performing a healthcheck (see healthckeck.io for details)
 - `BIB_USERS` A comma seperated list of combinations of <USER>:<PWD> combinations to check and extend lent items.
-- `LIBRARY_URL` The url of the OPAC entry page of your library
+- `LIBRARY_URL` The url of the OPAC entry page of your library, defaults to the one of Stadtbibliothek München
+- `RUN_AT_HOUR` Check at hour, default 6
+- `RUN_AT_MINUTE` Check at minute, default 0
 
 Example:
 

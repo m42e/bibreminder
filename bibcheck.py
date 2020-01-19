@@ -30,7 +30,7 @@ def main():
             break
 
         now = datetime.datetime.utcnow
-        to = (now() + datetime.timedelta(days = 1)).replace(hour=6, minute=0, second=0)
+        to = (now() + datetime.timedelta(days = 1)).replace(hour=os.environ.get('RUN_AT_HOUR', 6), minute=os.environ.get('RUN_AT_MINUTE', 0), second=0)
         time.sleep((to-now()).seconds)
 
 def check(username, password, notify_ids):
@@ -69,8 +69,6 @@ def check(username, password, notify_ids):
                     except:
                         print("No client")
     except (StopIteration, mechanize._mechanize.LinkNotFoundError) as e:
-        #for client in itertools.join(notify_ids, os.environ['PUSHOVER_CLIENTS'].split(',')):
-        #    pushover.Client(client).send_message(f'nichts ausgeliehen {username} ({e})')
         return []
     return allinfo
 
