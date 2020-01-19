@@ -10,14 +10,17 @@ Configure the docker container with the following variables.
 
 - `PUSHOVER_KEY` Your pushover API Key
 - `PUSHOVER_CLIENTS` A comma seperated list of pushover client ids. All the notifications will be sent to this ids
-- `NOTIFY_USERS` A coma separated list of <USER>:<pushover client id> tulles to send pushover messages selectivly
-- `HEALTHCHECK_URL` OPTIONAL url for performing a healthcheck (see healthckeck.io for details)
 - `BIB_USERS` A comma seperated list of combinations of <USER>:<PWD> combinations to check and extend lent items.
+
+
+### Optional:
 - `LIBRARY_URL` The url of the OPAC entry page of your library, defaults to the one of Stadtbibliothek München
 - `RUN_AT_HOUR` Check at hour, default 6
 - `RUN_AT_MINUTE` Check at minute, default 0
+- `HEALTHCHECK_URL` OPTIONAL url for performing a healthcheck (see healthckeck.io for details)
+- `NOTIFY_USERS` A coma separated list of <USER>:<pushover client id> tulles to send pushover messages selectivly
 
-Example:
+### Example:
 
 ```
 PUSHOVER_KEY=abcdef1234567890abcdef12345678
