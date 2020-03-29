@@ -37,7 +37,7 @@ def check(username, password, notify_ids):
     br = mechanize.Browser()
     starturl = os.environ.get('LIBRARY_URL', 'https://ssl.muenchen.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC')
     response = br.open(starturl)
-    br.follow_link(text_regex=r"Anmelden")
+    br.follow_link(text_regex=r"Anmeld(en|ung abschicken)")
     br.select_form('Form0')
     br['$Textfield'] = username
     br['$Textfield$0'] = password
