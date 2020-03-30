@@ -70,7 +70,7 @@ def main():
             minute=os.environ.get("RUN_AT_MINUTE", 0),
             second=0,
         )
-        _logger.info(f"Sleeping till {to.isodate()}")
+        _logger.info(f"Sleeping till {to..isoformat()}")
         time.sleep((to - now()).seconds)
 
 
