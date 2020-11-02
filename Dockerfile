@@ -6,12 +6,12 @@ WORKDIR /install
 COPY requirements.txt /requirements.txt
 RUN pip install --prefix=/install -r /requirements.txt
 
-ENV TZ=Europe/Berlin
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 FROM base
 COPY --from=builder /install /usr/local
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+ENV TZ=Europe/Berlin
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /home/appuser
 USER appuser
