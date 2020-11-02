@@ -10,6 +10,7 @@ RUN pip install --prefix=/install -r /requirements.txt
 FROM base
 COPY --from=builder /install /usr/local
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN apk add --no-cache tzdata
 ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
