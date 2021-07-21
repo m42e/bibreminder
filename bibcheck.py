@@ -10,7 +10,8 @@ import datetime
 import os
 import logging
 
-logging.basicConfig(level=getattr(logging, os.environ.get("LOG_LEVEL", "INFO")))
+#logging.basicConfig(level=getattr(logging, os.environ.get("LOG_LEVEL", "INFO")))
+logging.basicConfig(level=logging.DEBUG)
 _logger = logging.getLogger(__name__)
 
 
@@ -78,23 +79,34 @@ def check(username, password, notify_ids):
     br = mechanize.Browser()
     starturl = os.environ.get(
         "LIBRARY_URL",
-        "https://ssl.muenchen.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC",
+        "https://ssl.muenchen.de/aDISWeb/app?service=direct/0/Home/$DirectLink&sp=SOPAC&sp=SBK00000000",
     )
     _logger.info(f"Library URL used: {starturl}")
-    response = br.open(starturl)
     _logger.info(f"Goto loginpage")
-    br.follow_link(text_regex=r"Anmeld(en|ung abschicken)")
+    response = br.open(starturl)
     _logger.info(f"Fill form")
     br.select_form("Form0")
     br["$Textfield"] = username
     br["$Textfield$0"] = password
     _logger.info(f"Sumbit form")
-    response = br.submit()
-    _logger.info(f"Open account page")
-    br.follow_link(text_regex=r"Konto")
+    response = br.submit(name='textButton')
+    print (b'Matthias' in response.read())
+    currenturl = response.geturl()
+    cookies = br.cookiejar
+    # _logger.info(f"Open account page using form0")
+
+    #br.select_form(nr=0)
+    #br.set_all_readonly(False)
+    #br["$ScriptButton_hidden"] = 'BK'
+    br.set_debug_http(True)
+    # response = br.submit()
     try:
         _logger.info(f"Open lent list")
-        response = br.follow_link(text_regex=r"Ausleihen? zeigen")
+        req = mechanize.Request(currenturl + '?service=direct/1/POOLSTPM@@@@@@@@_4400E200_3B328A80/Tabelle_Z1LP01.cellInternalLink.directlink&sp=SRGLINK_5&sp=SZA&requestCount=1',method='GET',headers={'Referer': currenturl})
+        cookies.add_cookie_header(req)
+        response = br.open(req)
+        print(response.read())
+        _logger.info(f"Extend all")
         br.select_form("Form0")
         response = br.submit(name="textButton$0", label="Alle verlängern")
         lentlist = bs4.BeautifulSoup(response.read(), "html.parser")
